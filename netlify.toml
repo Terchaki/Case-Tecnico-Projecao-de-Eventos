@@ -1,6 +1,6 @@
 [build]
   command = "npx ng build --configuration production"
-  publish = "projecao-de-eventos/dist/projecao-de-eventos/browser"
+  publish = "dist/projecao-de-eventos/browser"
 
 [[plugins]]
   package = "@netlify/angular-runtime"
