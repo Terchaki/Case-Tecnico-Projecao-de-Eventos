@@ -1,5 +1,4 @@
 [build]
-  base = "projecao-de-eventos"
   command = "npx ng build --configuration production"
   publish = "projecao-de-eventos/dist/projecao-de-eventos/browser"
 
