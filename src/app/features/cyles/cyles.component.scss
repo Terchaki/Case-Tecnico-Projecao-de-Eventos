@@ -1,0 +1,78 @@
+.cycles-collapse {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #242826;
+
+  span {
+    color: #7B7D7C;
+  }
+}
+
+.table-container {
+  width: 100%;
+  background-color: #fff;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+
+  .table-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    background-color: #f9f9f9;
+
+    .table-title {
+      font-weight: bold;
+      color: #2EADF2;
+      font-size: 0.75rem;
+    }
+
+    .table-subtitle {
+      display: flex;
+      gap: 20px;
+      font-size: 0.75rem;
+      color: #656866;
+    }
+  }
+
+  .table-section-label {
+    padding: 8px 12px;
+    background-color: #f1f1f1;
+    color: #656866;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      background-color: #fafafa;
+      font-weight: 600;
+    }
+
+    tr {
+      &.disabled {
+        color: #aaa;
+
+        input[type="checkbox"] {
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    input[type="checkbox"] {
+      cursor: pointer;
+      background: #242826;
+    }
+  }
+}

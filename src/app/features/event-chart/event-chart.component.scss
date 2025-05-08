@@ -1,0 +1,20 @@
+.label-chart {
+  color: #242826;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.chart-description {
+  color: #242826;
+  font-size: 0.75rem;
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+  border: 1px solid red;
+
+  canvas {
+    width: 100%;
+  }
+}

@@ -1,7 +1,87 @@
-<p>cyles worksdfsdfsdfsdfsdfsdfjsdklfm
-  sdf
-  sdf
-  sdf
+<div class="d-inline-flex gap-1">
+  <a
+    data-bs-toggle="collapse"
+    href="#multiCollapse"
+    role="button"
+    aria-expanded="false"
+    aria-controls="multiCollapse"
+    (click)="alterExpand()"
+  >
+    <p class="cycles-collapse">
+      Selecione ciclos <span>(opcional)</span
+      ><img
+        class="pb-1"
+        src="/icons/chevron-{{ expanded ? 'down' : 'up' }}.svg"
+        alt="Seta para {{ expanded ? 'baixo' : 'cima' }}"
+      />
+    </p>
+  </a>
+</div>
+<hr class="m-0" *ngIf="expanded" />
+<div class="row">
+  <div class="col">
+    <div class="collapse multi-collapse" id="multiCollapse">
+      <p style="color: #242826; font-size: 0.75rem">
+        Por padrão as entidades são selecionadas automaticamente de acordo com
+        os ciclos que você participa e suas prioridades
+      </p>
+      <div class="table-container">
+        <div class="table-header">
+          <div class="table-title">
+            Ciclos
+            <img src="/icons/chevron-down-blue.svg" alt="Seta para baixo" />
+          </div>
+          <div class="table-subtitle">
+            <span>Selecionados/Disponíveis</span>
+            <span>Eventos para hoje</span>
+          </div>
+        </div>
 
-  sdf
-  ss!</p>
+        <div style="border: 1px solid #ddd; border-radius: 8px">
+          <div class="table-section-label">
+            Ciclos com entidades disponíveis (4)
+          </div>
+
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th class="p-0"></th>
+                <th class="p-0"></th>
+                <th class="p-0"></th>
+                <th class="p-0"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <input type="checkbox" checked />
+                </td>
+                <td>Prospecção outbound</td>
+                <td>1/1</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" checked /></td>
+                <td>Credenciamento</td>
+                <td>3/1</td>
+                <td>12</td>
+              </tr>
+              <tr>
+                <td><input type="checkbox" checked /></td>
+                <td>Outbound Geral</td>
+                <td>6/195</td>
+                <td>18</td>
+              </tr>
+              <tr class="disabled">
+                <td><input type="checkbox" disabled /></td>
+                <td>ciclo teste de exclusão</td>
+                <td>0/2</td>
+                <td>0</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
