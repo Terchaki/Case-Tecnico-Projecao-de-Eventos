@@ -1,48 +1,78 @@
-<!-- <button type="button" (click)="closeModal()">Fechar</button> -->
-<mat-dialog-content>
-  <div class="modal-header">
-    <h6>Iniciar novas Entidades</h6>
-    <span>
-      <svg class="cursor-pointer" xmlns="http://www.w3.org/2000/svg" width="18"
-        height="18" mat-dialog-close (click)="closeModal()"
-        fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0
+<form (ngSubmit)="onSubmit()" [formGroup]="form">
+  <mat-dialog-content>
+    <div class="modal-header">
+      <h6>Iniciar novas Entidades</h6>
+      <span>
+        <svg
+          class="cursor-pointer"
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          mat-dialog-close
+          fill="currentColor"
+          class="bi bi-x-lg"
+          viewBox="0 0 16 16"
+        >
+          <path
+            d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0
           1
           .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146
           5.147a.5.5
-          0 0 1-.708-.708L7.293 8z">
-        </path>
-      </svg>
-    </span>
-  </div>
-  <div class="modal-body">
-    <div class="container-entity">
-      <div class="row">
-        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-          <h6>Entidades à iniciar</h6>
-          <p class="description-entity">Após o início, os eventos serão
-            disponibilizados para execução nos
-            dias que estão definidos em seus ciclos.</p>
-        </div>
-        <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-          <div class="input-group mb-3">
-            <span class="input-group-text" id="basic-addon1">
-              <img src="/icons/icon_media.svg" alt="Icone de
-                media">
-            </span>
-            <input type="number" class="form-control" placeholder="1">
-            <span class="input-group-text" id="basic-addon2">Entidades</span>
+          0 0 1-.708-.708L7.293 8z"
+          ></path>
+        </svg>
+      </span>
+    </div>
+    <div class="modal-body">
+      <div class="container-entity">
+        <div class="row">
+          <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <h6>Entidades à iniciar</h6>
+            <p class="description-entity">
+              Após o início, os eventos serão disponibilizados para execução nos
+              dias que estão definidos em seus ciclos.
+            </p>
           </div>
-          <p class="events-day">Novos eventos para hoje:<span> 35 eventos</span></p>
+          <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon1">
+                <img
+                  src="/icons/icon_media.svg"
+                  alt="Icone de
+                mídia"
+                />
+              </span>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="quantityEntities"
+                placeholder="Ex: 1"
+                min="1"
+                (input)="checkInput()"
+              />
+              <span class="input-group-text" id="basic-addon2">Entidades</span>
+            </div>
+            <p class="events-day">
+              Novos eventos para {{ getDayWeek() }}:<span>
+                {{ qualityEventsDay }} eventos</span
+              >
+            </p>
+          </div>
         </div>
       </div>
+      <hr />
+      <!-- Cycles Component -->
+      <app-cyles></app-cyles>
+      <!-- Charts Component -->
+      <app-event-chart></app-event-chart>
     </div>
-    <hr>
-    <app-cyles></app-cyles>
-    <app-event-chart></app-event-chart>
-  </div>
-</mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button class="btn-restart">Fechar</button>
-  <button mat-button class="btn-init">Iniciar novas entidades</button>
-</mat-dialog-actions>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button class="btn-restart" (click)="restoreDefaultData()">
+      Restaurar
+    </button>
+    <button mat-button type="submit" class="btn-init">
+      Iniciar novas entidades
+    </button>
+  </mat-dialog-actions>
+</form>

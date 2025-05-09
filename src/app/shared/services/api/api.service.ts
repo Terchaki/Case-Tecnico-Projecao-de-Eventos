@@ -5,15 +5,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 // Models
-import { DataEventsProjection } from '../models/data-events-projection.model';
+import { DataEventsProjection } from '../../models/data-events-projection.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
   // Url for conection API.
-  private urlApi =
-    'https://drive.google.com/file/d/1yFFlOSiCBPcf2DX1hguoiGyGXMkXAVOw/view';
+  private urlApi = '/data/eventsAPIResponse.json';
 
   constructor(private http: HttpClient) {}
 

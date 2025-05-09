@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 // import { Chart } from 'chart.js';
 import Chart from 'chart.js/auto';
+import { Subscription } from 'rxjs';
+import { DataEventsProjection } from '../../shared/models/data-events-projection.model';
+import { EventsProjectionService } from '../../shared/services/eventsProjection/events-projection.service';
 
 @Component({
   selector: 'app-event-chart',
@@ -8,8 +11,10 @@ import Chart from 'chart.js/auto';
   templateUrl: './event-chart.component.html',
   styleUrl: './event-chart.component.scss',
 })
-export class EventChartComponent implements OnInit {
+export class EventChartComponent implements OnInit, OnDestroy {
   chartInstance: Chart | any = null;
+  dataEvents!: { quantityEntity: number; projections: DataEventsProjection };
+  subscription!: Subscription;
 
   dataGrafico = [
     {
@@ -50,13 +55,36 @@ export class EventChartComponent implements OnInit {
     },
   ];
 
-  constructor() {}
+  constructor(private eventsProjectionService: EventsProjectionService) {}
 
   ngOnInit(): void {
     this.initGraf();
+    this.getDataEvents();
+  }
+
+  ngOnDestroy() {
+    if (this.chartInstance) {
+      this.chartInstance.destroy();
+    }
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  getDataEvents() {
+    this.subscription = this.eventsProjectionService.data$.subscribe((data) => {
+      console.log(data);
+      if (data) {
+        this.dataEvents = data;
+        console.log(this.dataEvents);
+      }
+    });
   }
 
   initGraf() {
+    if (this.chartInstance) {
+      this.chartInstance.destroy();
+    }
     const grafico = document.getElementById('grafico') as HTMLCanvasElement;
 
     this.chartInstance = new Chart(grafico, {

@@ -1,4 +1,4 @@
-import { ApiService } from './../../shared/services/api.service';
+import { ApiService } from '../../shared/services/api/api.service';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { ModalEntitiesComponent } from '../modal-entities/modal-entities.component';

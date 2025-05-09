@@ -40,6 +40,10 @@
     .input-group .input-group-text {
       border-radius: 3px;
       height: 48px;
+
+      &::placeholder {
+        opacity: 0.8;
+      }
     }
 
     .events-day {
@@ -82,7 +86,7 @@
 
 ::ng-deep .mdc-dialog--open .mat-mdc-dialog-inner-container {
   border-radius: 0 !important;
-  background: #fff;
+  background: #faf9fd;
   padding: 0;
 }
 

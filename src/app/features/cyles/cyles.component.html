@@ -17,7 +17,9 @@
     </p>
   </a>
 </div>
-<hr class="m-0" *ngIf="expanded" />
+<ng-container *ngIf="expanded">
+  <hr class="m-0" />
+</ng-container>
 <div class="row">
   <div class="col">
     <div class="collapse multi-collapse" id="multiCollapse">
