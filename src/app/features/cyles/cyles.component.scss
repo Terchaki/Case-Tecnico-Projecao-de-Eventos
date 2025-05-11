@@ -1,3 +1,16 @@
+::ng-deep .mat-checkbox.checked-green .mat-checkbox-background {
+  background-color: #4caf50 !important;
+}
+
+::ng-deep .mat-checkbox.checked-green.mat-accent .mat-checkbox-frame {
+  border-color: #4caf50 !important;
+}
+
+::ng-deep .mat-checkbox.checked-green .mat-checkbox-ripple .mat-ripple-element {
+  background-color: rgba(76, 175, 80, 0.26) !important;
+}
+
+
 .cycles-collapse {
   font-size: 0.88rem;
   font-weight: 500;

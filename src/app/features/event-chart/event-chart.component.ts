@@ -2,7 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 // import { Chart } from 'chart.js';
 import Chart from 'chart.js/auto';
 import { Subscription } from 'rxjs';
+import { DayWeek } from '../../shared/enums/day-week.enum';
 import { DataEventsProjection } from '../../shared/models/data-events-projection.model';
+import { EventsProjection } from '../../shared/models/events-projection.model';
 import { EventsProjectionService } from '../../shared/services/eventsProjection/events-projection.service';
 
 @Component({
@@ -15,50 +17,12 @@ export class EventChartComponent implements OnInit, OnDestroy {
   chartInstance: Chart | any = null;
   dataEvents!: { quantityEntity: number; projections: DataEventsProjection };
   subscription!: Subscription;
-
-  dataGrafico = [
-    {
-      mes: 'Janeiro',
-      mediaDiasParaAnalise: 5.2,
-      interacoes: 12,
-      interacoesComite: 3,
-    },
-    {
-      mes: 'Fevereiro',
-      mediaDiasParaAnalise: 6.8,
-      interacoes: 15,
-      interacoesComite: 4,
-    },
-    {
-      mes: 'Março',
-      mediaDiasParaAnalise: 4.5,
-      interacoes: 10,
-      interacoesComite: 2,
-    },
-    {
-      mes: 'Abril',
-      mediaDiasParaAnalise: 7.1,
-      interacoes: 18,
-      interacoesComite: 5,
-    },
-    {
-      mes: 'Maio',
-      mediaDiasParaAnalise: 5.9,
-      interacoes: 14,
-      interacoesComite: 3,
-    },
-    {
-      mes: 'Junho',
-      mediaDiasParaAnalise: 6.3,
-      interacoes: 17,
-      interacoesComite: 6,
-    },
-  ];
+  currentDate: Date = new Date();
+  projectionUpcomingEents!: EventsProjection[];
 
   constructor(private eventsProjectionService: EventsProjectionService) {}
 
   ngOnInit(): void {
-    this.initGraf();
     this.getDataEvents();
   }
 
@@ -77,19 +41,39 @@ export class EventChartComponent implements OnInit, OnDestroy {
       if (data) {
         this.dataEvents = data;
         console.log(this.dataEvents);
+        this.initGraf();
       }
     });
   }
 
   initGraf() {
+    this.projectionUpcomingEents = [];
+
+    // Obtaining the object with the ordering of working days.
+    this.projectionUpcomingEents = this.eventsProjectionService.orderNextEvents(
+      this.dataEvents
+    );
+
     if (this.chartInstance) {
       this.chartInstance.destroy();
     }
+
+    let currentDay: number = this.currentDate.getDay();
+
+    /**
+     * To simulate a specific day in the chart legend,
+     * simply uncomment this line and insert the desired day.
+     * Ex:
+     */
+    // currentDay = 3;
+
     const grafico = document.getElementById('grafico') as HTMLCanvasElement;
 
     this.chartInstance = new Chart(grafico, {
       type: 'bar',
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         animation: false,
         plugins: {
           legend: {
@@ -105,30 +89,69 @@ export class EventChartComponent implements OnInit, OnDestroy {
           },
           tooltip: {
             enabled: true,
+            callbacks: {
+              title: (context) => {
+                const index = context[0].dataIndex;
+                const label =
+                  this.projectionUpcomingEents[index].day === currentDay
+                    ? 'Hoje'
+                    : DayWeek[this.projectionUpcomingEents[index].day];
+                const data = this.projectionUpcomingEents[index].date;
+                return `${label} - ${data?.toLocaleDateString()}`;
+              },
+            },
+          },
+          title: {
+            position: 'left',
+            display: true,
+            text: [`Quantidade de Eventos`],
+            color: '#9b9b9b',
+            fullSize: true,
+            padding: {},
+            font: {
+              size: 12,
+            },
+          },
+        },
+        scales: {
+          x: {
+            stacked: true, // <- Bar stacking X.
+            grid: {
+              display: false,
+            },
+          },
+          y: {
+            stacked: true, // <- Bar stacking Y.
+            beginAtZero: true,
           },
         },
       },
       data: {
-        labels: this.dataGrafico.map((row) => row.mes),
+        labels: this.projectionUpcomingEents.map((row) =>
+          currentDay === row.day ? 'Hoje' : DayWeek[row.day]
+        ),
         datasets: [
           {
-            label: `Encontros`,
-            data: this.dataGrafico.map(
-              (row) => +row.mediaDiasParaAnalise.toFixed(2)
+            label: `Reuniões`,
+            data: this.projectionUpcomingEents.map(
+              (row) => row.events.meetings
             ),
-            backgroundColor: ['#418cf0'],
+            backgroundColor: ['#40bb72'],
           },
           {
-            label: `Mensagens`,
-            data: this.dataGrafico.map((row) => +row.interacoes.toFixed(2)),
-            backgroundColor: ['#fcb441'],
+            label: `E-mails`,
+            data: this.projectionUpcomingEents.map((row) => row.events.emails),
+            backgroundColor: ['#969696'],
           },
           {
-            label: `Checkpoints`,
-            data: this.dataGrafico.map(
-              (row) => +row.interacoesComite.toFixed(2)
-            ),
-            backgroundColor: ['#e0400a'],
+            label: `Ligações`,
+            data: this.projectionUpcomingEents.map((row) => row.events.calls),
+            backgroundColor: ['#5cc5dc'],
+          },
+          {
+            label: `Follows`,
+            data: this.projectionUpcomingEents.map((row) => row.events.follows),
+            backgroundColor: ['#8689ff'],
           },
         ],
       },
