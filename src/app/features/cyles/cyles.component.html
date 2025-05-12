@@ -20,7 +20,7 @@
 <ng-container *ngIf="expanded">
   <hr class="m-0" />
 </ng-container>
-<div class="row">
+<div class="row mb-4">
   <div class="col">
     <div class="collapse multi-collapse" id="multiCollapse">
       <p style="color: #242826; font-size: 0.75rem">
@@ -34,7 +34,7 @@
             <img src="/icons/chevron-down-blue.svg" alt="Seta para baixo" />
           </div>
           <div class="table-subtitle">
-            <span>Selecionados/Disponíveis</span>
+            <span>Selecionados/<br>Disponíveis</span>
             <span>Eventos para hoje</span>
           </div>
         </div>
@@ -54,32 +54,20 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>
-                  <mat-checkbox class="green-checkbox"></mat-checkbox>
-                  <!-- <input type="checkbox" checked /> -->
+              <tr *ngFor="let cycle of cycles">
+                <td class="text-center px-0">
+                  <!-- <mat-checkbox class="green-checkbox"></mat-checkbox> -->
+                  <input type="checkbox" checked />
                 </td>
-                <td>Prospecção outbound</td>
+                <td class="label-cycle">
+                  <img
+                    src="/icons/arrow-up-{{ cycle.priority }}.svg"
+                    alt="Seta"
+                  />
+                  {{ cycle.name }}
+                </td>
                 <td>1/1</td>
-                <td>4</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" checked /></td>
-                <td>Credenciamento</td>
-                <td>3/1</td>
-                <td>12</td>
-              </tr>
-              <tr>
-                <td><input type="checkbox" checked /></td>
-                <td>Outbound Geral</td>
-                <td>6/195</td>
-                <td>18</td>
-              </tr>
-              <tr class="disabled">
-                <td><input type="checkbox" disabled /></td>
-                <td>ciclo teste de exclusão</td>
-                <td>0/2</td>
-                <td>0</td>
+                <td>{{ sumEvents(cycle.structure) }}</td>
               </tr>
             </tbody>
           </table>

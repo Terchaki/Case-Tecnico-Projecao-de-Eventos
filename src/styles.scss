@@ -1,4 +1,3 @@
-
 // Toastr
 @use 'ngx-toastr/toastr';
 
@@ -19,6 +18,17 @@ body {
 a {
   text-decoration: none;
   color: inherit;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 3px;
 }
 
 // Class Globals
