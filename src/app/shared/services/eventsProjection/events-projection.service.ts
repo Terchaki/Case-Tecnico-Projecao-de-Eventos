@@ -61,38 +61,6 @@ export class EventsProjectionService {
       }
     );
 
-    // const todayDate = new Date(this.currentDate); // base
-    // let daysAdded = 0;
-
-    // const listNextDaysOrder: EventsProjection[] = nextDaysOrder.flatMap((day) => {
-    //   const found = this.dataEvents.projections.eventsProjection.find(
-    //     (e) => e.day === day
-    //   );
-
-    //   if (found) {
-    //     // Pula fins de semana enquanto calcula a próxima data
-    //     let futureDate = new Date(todayDate);
-    //     let added = 0;
-    //     while (added <= daysAdded) {
-    //       futureDate.setDate(futureDate.getDate() + 1);
-    //       const dayOfWeek = futureDate.getDay();
-    //       if (dayOfWeek >= 1 && dayOfWeek <= 5) {
-    //         added++;
-    //       }
-    //     }
-
-    //     found.date = futureDate;
-    //     daysAdded++;
-    //     return [found];
-    //   }
-
-    //   return [];
-    // });
-
-    // console.log(listNextDaysOrder);
-
-    // return listNextDaysOrder;
-
     // Including future dates in the object based on today's (current) date.
     const dateBusiness = new Date();
     for (let index = 0; index < listNextDaysOrder.length; index++) {
@@ -115,5 +83,129 @@ export class EventsProjectionService {
     console.log(listNextDaysOrder);
 
     return listNextDaysOrder;
+  }
+
+  getDadosParaGraficoELista(
+    quantityEntity: number,
+    projections: DataEventsProjection
+  ) {
+    const getDiaUtilAtual = (): number => {
+      const hoje = new Date();
+      const diaSemana = hoje.getDay(); // 0 = domingo, 6 = sábado
+
+      // Conta quantos dias úteis se passaram desde segunda-feira da semana atual
+      let contador = 0;
+      let diasCorridos = 0;
+
+      while (contador < 5) {
+        const data = new Date();
+        data.setDate(hoje.getDate() - diasCorridos);
+        const dia = data.getDay();
+        if (dia >= 1 && dia <= 5) {
+          contador++;
+        }
+        if (data.toDateString() === hoje.toDateString()) {
+          break;
+        }
+        diasCorridos++;
+      }
+
+      return contador || 1; // Garante ao menos 1
+    };
+
+    const diaUtilAtual = getDiaUtilAtual();
+
+    // Ordenar ciclos por prioridade
+    const prioridadeMap: any = { HIGH: 1, MEDIUM: 2, LOW: 3 };
+    const ciclosOrdenados: any = [...projections?.cycles].sort(
+      (a, b) => prioridadeMap[a.priority] - prioridadeMap[b.priority]
+    );
+
+    const ciclosSelecionados: any[] = [];
+    let entidadesRestantes = quantityEntity;
+
+    for (const ciclo of ciclosOrdenados) {
+      if (entidadesRestantes === 0) break;
+      const entidadesParaEsseCiclo = Math.min(
+        ciclo.availableEntities,
+        entidadesRestantes
+      );
+      if (entidadesParaEsseCiclo > 0) {
+        ciclosSelecionados.push({
+          ...ciclo,
+          entidadesSelecionadas: entidadesParaEsseCiclo,
+        });
+        entidadesRestantes -= entidadesParaEsseCiclo;
+      }
+    }
+
+    // Atualizar projeções somando eventos dos ciclos com entidades alocadas
+    const graficoFinal = projections.eventsProjection.map((proj) => {
+      const eventos = { ...proj.events };
+      ciclosSelecionados.forEach((ciclo) => {
+        const estruturaDia = ciclo.structure.find(
+          (d: any) => d.day === proj.day
+        );
+        if (estruturaDia) {
+          eventos.meetings +=
+            estruturaDia.meetings * ciclo.entidadesSelecionadas;
+          eventos.emails += estruturaDia.emails * ciclo.entidadesSelecionadas;
+          eventos.calls += estruturaDia.calls * ciclo.entidadesSelecionadas;
+          eventos.follows += estruturaDia.follows * ciclo.entidadesSelecionadas;
+        }
+      });
+
+      return {
+        day: proj.day,
+        ...eventos,
+      };
+    });
+
+    // Montar a tabela com prioridade, eventosHoje e total de eventos
+    const tabelaCiclos = ciclosOrdenados.map((c: any) => {
+      const cicloSelecionado = ciclosSelecionados.find(
+        (cs) => cs.name === c.name
+      );
+      const entidadesSelecionadas =
+        cicloSelecionado?.entidadesSelecionadas || 0;
+
+      const eventosHoje = c.structure.find(
+        (s: any) => s.day === diaUtilAtual
+      ) || {
+        meetings: 0,
+        emails: 0,
+        calls: 0,
+        follows: 0,
+      };
+
+      const totalEventos =
+        eventosHoje.meetings +
+        eventosHoje.emails +
+        eventosHoje.calls +
+        eventosHoje.follows;
+
+      return {
+        nome: c.name,
+        prioridade: c.priority,
+        disponiveis: c.availableEntities,
+        selecionados: `${entidadesSelecionadas}/${c.availableEntities}`,
+        eventosHoje,
+        totalEventos,
+      };
+    });
+
+    const ciclosComDisponiveis = ciclosOrdenados.filter(
+      (c: any) => c.availableEntities > 0
+    ).length;
+    const ciclosSemDisponiveis = ciclosOrdenados.filter(
+      (c: any) => c.availableEntities === 0
+    ).length;
+
+    return {
+      grafico: graficoFinal,
+      tabela: tabelaCiclos,
+      ciclosComDisponiveis,
+      ciclosSemDisponiveis,
+    };
   }
 }

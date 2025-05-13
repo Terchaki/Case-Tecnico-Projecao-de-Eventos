@@ -21,6 +21,8 @@ export class CylesComponent implements OnInit, OnDestroy {
   dataEvents!: { quantityEntity: number; projections: DataEventsProjection };
   cycles!: Cycles[];
   dateToday: Date = new Date();
+  dataCycles: any;
+  ciclosSelecionadosNomes: string[] = [];
 
   constructor(
     private cdr: ChangeDetectorRef,
@@ -28,7 +30,9 @@ export class CylesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // setTimeout(() => {
     this.getDataEvents();
+    // }, 1000);
   }
 
   ngOnDestroy() {
@@ -43,47 +47,37 @@ export class CylesComponent implements OnInit, OnDestroy {
   }
 
   getDataEvents() {
-    this.cycles = [];
-
     this.subscription = this.eventsProjectionService.data$.subscribe(
       (data: { quantityEntity: number; projections: DataEventsProjection }) => {
         console.log(data);
-        if (data?.projections?.cycles) {
-          // Adicionei optional chaining para segurança
-          this.dataEvents = data;
-          this.cycles = data.projections.cycles
-
-          this.cycles.filter(cycle => {
-            return cycle.structure && cycle.structure.some(item => item.day === 1);
-          });
-
-          const priorityOrder: {
-            HIGH: number;
-            MEDIUM: number;
-            LOW: number;
-          } = { HIGH: 1, MEDIUM: 2, LOW: 3 };
-
-          this.dataEvents.projections.cycles.sort((a, b) => {
-            return (
-              priorityOrder[a.priority as keyof typeof priorityOrder] -
-              priorityOrder[b.priority as keyof typeof priorityOrder]
+        if (data?.quantityEntity && data?.projections) {
+          this.dataCycles =
+            this.eventsProjectionService?.getDadosParaGraficoELista(
+              data?.quantityEntity,
+              data?.projections
             );
-          });
+
+          // Marcar automaticamente ciclos que foram alocados
+          this.ciclosSelecionadosNomes = this.dataCycles.tabela
+            .filter((t: any) => t.selecionados.startsWith('1')) // ou > 0, dependendo de como deseja marcar
+            .map((t: any) => t.nome);
           this.cdr.detectChanges();
-          // console.log(this.dataEvents);
+          console.log(this.dataCycles);
         }
       }
     );
   }
 
-  sumEvents(events: StructureCycles[]): number {
-    // console.log(events);
-    // let sum = 0;
+  cicloSelecionado(nome: string): boolean {
+    return this.ciclosSelecionadosNomes.includes(nome);
+  }
 
-    // events.filter((el => {
-    //   el.
-    // }))
-    // console.log(sum);
-    return 0;
+  toggleCiclo(ciclo: any) {
+    const index = this.ciclosSelecionadosNomes.indexOf(ciclo.nome);
+    if (index >= 0) {
+      this.ciclosSelecionadosNomes.splice(index, 1);
+    } else {
+      this.ciclosSelecionadosNomes.push(ciclo.nome);
+    }
   }
 }

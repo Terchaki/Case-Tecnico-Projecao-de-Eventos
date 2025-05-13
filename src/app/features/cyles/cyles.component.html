@@ -34,14 +34,16 @@
             <img src="/icons/chevron-down-blue.svg" alt="Seta para baixo" />
           </div>
           <div class="table-subtitle">
-            <span>Selecionados/<br>Disponíveis</span>
+            <span>Selecionados/<br />Disponíveis</span>
             <span>Eventos para hoje</span>
           </div>
         </div>
 
         <div style="border: 1px solid #ddd; border-radius: 8px">
           <div class="table-section-label">
-            Ciclos com entidades disponíveis (4)
+            Ciclos com entidades disponíveis ({{
+              dataCycles?.ciclosComDisponiveis
+            }})
           </div>
 
           <table class="custom-table">
@@ -54,23 +56,32 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let cycle of cycles">
-                <td class="text-center px-0">
+              <tr *ngFor="let cycle of dataCycles?.tabela">
+                <td class="text-center ps-2 pe-0">
                   <!-- <mat-checkbox class="green-checkbox"></mat-checkbox> -->
-                  <input type="checkbox" checked />
+                  <input
+                    type="checkbox"
+                    [checked]="cicloSelecionado(cycle.nome)"
+                    (change)="toggleCiclo(cycle)"
+                  />
                 </td>
                 <td class="label-cycle">
                   <img
-                    src="/icons/arrow-up-{{ cycle.priority }}.svg"
+                    src="/icons/arrow-up-{{ cycle.prioridade }}.svg"
                     alt="Seta"
                   />
-                  {{ cycle.name }}
+                  {{ cycle.nome }}
                 </td>
-                <td>1/1</td>
-                <td>{{ sumEvents(cycle.structure) }}</td>
+                <td>{{ cycle.selecionados }}</td>
+                <td>{{ cycle.totalEventos }}</td>
               </tr>
             </tbody>
           </table>
+          <div class="table-section-label">
+            Ciclos sem entidades disponíveis ({{
+              dataCycles?.ciclosSemDisponiveis
+            }})
+          </div>
         </div>
       </div>
     </div>
