@@ -1,7 +1,13 @@
-import { ApiService } from '../../shared/services/api/api.service';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+
+// Angular Material
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+
+// Components
 import { ModalEntitiesComponent } from '../modal-entities/modal-entities.component';
+
+// Services
+import { ApiService } from '../../shared/services/api/api.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +23,6 @@ export class HomeComponent implements OnInit {
 
   openModal() {
     this.dialog.open(ModalEntitiesComponent, {
-      width: '800px',
       disableClose: true, // Prevents modal from closing when clicking outside.
     });
   }

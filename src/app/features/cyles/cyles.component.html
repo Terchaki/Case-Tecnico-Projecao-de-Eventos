@@ -42,7 +42,7 @@
         <div style="border: 1px solid #ddd; border-radius: 8px">
           <div class="table-section-label">
             Ciclos com entidades disponíveis ({{
-              dataCycles?.ciclosComDisponiveis
+              dataCycles?.cyclesWithAvailability
             }})
           </div>
 
@@ -56,30 +56,30 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let cycle of dataCycles?.tabela">
+              <tr *ngFor="let cycle of dataCycles?.table">
                 <td class="text-center ps-2 pe-0">
-                  <!-- <mat-checkbox class="green-checkbox"></mat-checkbox> -->
                   <input
                     type="checkbox"
-                    [checked]="cicloSelecionado(cycle.nome)"
-                    (change)="toggleCiclo(cycle)"
+                    [checked]="isCycleSelected(cycle.name
+                    )"
+                    (change)="toggleCycle(cycle)"
                   />
                 </td>
                 <td class="label-cycle">
                   <img
-                    src="/icons/arrow-up-{{ cycle.prioridade }}.svg"
+                    src="/icons/arrow-up-{{ cycle.priority }}.svg"
                     alt="Seta"
                   />
-                  {{ cycle.nome }}
+                  {{ cycle.name }}
                 </td>
-                <td>{{ cycle.selecionados }}</td>
-                <td>{{ cycle.totalEventos }}</td>
+                <td>{{ cycle.selected }}</td>
+                <td>{{ cycle.totalEvents}}</td>
               </tr>
             </tbody>
           </table>
           <div class="table-section-label">
             Ciclos sem entidades disponíveis ({{
-              dataCycles?.ciclosSemDisponiveis
+              dataCycles?.cyclesWithoutAvailability
             }})
           </div>
         </div>

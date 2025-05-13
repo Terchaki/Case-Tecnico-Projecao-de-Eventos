@@ -50,10 +50,12 @@ export class ModalEntitiesComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
   qualityEventsDay: number = 1;
   currentDay: number = new Date().getDay();
+  formSubmit: boolean = false;
   dataEventsChart!: {
     quantityEntity: number;
     projections: DataEventsProjection;
   };
+  totalAvailable: number = 1;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -71,6 +73,7 @@ export class ModalEntitiesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getDataEventsProjection();
+    this.getAvaibleEntities();
   }
 
   ngOnDestroy() {
@@ -108,7 +111,7 @@ export class ModalEntitiesComponent implements OnInit, OnDestroy {
           }
         });
         this.qualityEventsDay = sumEvents;
-        this.cdr.detectChanges();
+        this.cdr.detectChanges(); // Checking changes in angular
 
         // Data sent via service to components.
         this.dataEventsChart = {
@@ -125,6 +128,17 @@ export class ModalEntitiesComponent implements OnInit, OnDestroy {
         );
       },
     });
+  }
+
+  getAvaibleEntities() {
+    this.subscription = this.eventsProjectionService.totalAvailable$.subscribe(
+      (total) => {
+        if (total) {
+          this.totalAvailable = total;
+          console.log('Total received in parent:', total);
+        }
+      }
+    );
   }
 
   /**
@@ -176,34 +190,48 @@ export class ModalEntitiesComponent implements OnInit, OnDestroy {
    * Restore Default Data.
    */
   restoreDefaultData() {
-    this.formControls['quantityEntities'].setValue(1);
-    this.dataEventsChart.quantityEntity = 1;
-    this.eventsProjectionService.setData(this.dataEventsChart);
-    this.toastrFeedbackService.toast(
-      '',
-      `O Gráfico e os Ciclos foram restaurados para os seus valores padrões para o dia de ${this.getDayWeek()}.`,
-      'success'
-    );
+    if (this.formSubmit) {
+      this.formControls['quantityEntities'].setValue(1);
+      this.dataEventsChart.quantityEntity = 1;
+      this.eventsProjectionService.setData(this.dataEventsChart);
+      this.toastrFeedbackService.toast(
+        '',
+        `O gráfico e os ciclos foram restaurados para os valores padrão do dia ${this.getDayWeek()}.`,
+        'success'
+      );
+    }
   }
 
   onSubmit() {
     if (this.form.valid) {
       let quantityEntity = this.formControls['quantityEntities'].value;
+      if (quantityEntity <= this.totalAvailable) {
+        this.formSubmit = true;
+        this.dataEventsChart.quantityEntity = quantityEntity;
+        this.eventsProjectionService.setData(this.dataEventsChart);
 
-      this.dataEventsChart.quantityEntity = quantityEntity;
-      this.eventsProjectionService.setData(this.dataEventsChart);
-
-      if (quantityEntity > 1) {
+        if (quantityEntity > 1) {
+          this.toastrFeedbackService.toast(
+            '',
+            `${quantityEntity} entidade${
+              quantityEntity > 1 ? 's' : ''
+            } iniciada${quantityEntity > 1 ? 's' : ''} com sucesso!`,
+            'success'
+          );
+        }
+      } else {
         this.toastrFeedbackService.toast(
-          '',
-          `Foi iniciado ${quantityEntity} entidades! `,
-          'success'
+          'Valor inválido!',
+          `É possível iniciar até ${this.totalAvailable} entidade${
+            this.totalAvailable > 1 ? 's' : ''
+          }, de acordo com os ciclos disponíveis.`,
+          'info'
         );
       }
     } else {
       this.toastrFeedbackService.toast(
         'Valor inválido!',
-        'A entidade só é iniciada com valores a partir de 1.',
+        'É necessário informar um valor igual ou maior que 1 para iniciar uma entidade.',
         'warning'
       );
     }

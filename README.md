@@ -8,9 +8,23 @@
 
 Esta aplicação Angular tem como objetivo apresentar uma projeção dinâmica de eventos diários ao longo de cinco dias úteis, organizada por ciclos de atividades com diferentes níveis de prioridade. O usuário pode iniciar uma quantidade específica de entidades, que são distribuídas inteligentemente entre os ciclos de maior prioridade. Um gráfico interativo exibe a projeção, atualizando-se em tempo real conforme as configurações de ciclos e entidades são modificadas.
 
+<br>
+
+## Demonstração da Aplicação
+
+<br>
+
+<div style="text-align: center">
+  <img src="./public/gif/aplication.gif" alt="Demonstração do Projeto" width="800">
+</div>
+
+<br><hr>
+
 ## 🚀 Deploy da Aplicação
 
 [![Ver no Browser](https://img.shields.io/badge/Ver%20no%20Browser-ab00ff?style=for-the-badge)](https://projecao-de-eventos.netlify.app/)
+
+<br>
 
 ## 📄 Documentação Técnica
 
@@ -74,6 +88,9 @@ src/
 * **Gerenciamento de Legendas:** Permitir a remoção seletiva de legendas/tipos de eventos do gráfico.
 * **Opção de dias úteis:** Disponibilizar a opção incluir ou remover dia útil.
 * **Opções de Visualização Adicionais:** Disponibilizar a opção de visualizar os dados do gráfico em formato de pizza.
+* **Selecionar todos** Disponibilizar uma opção para marcar ou desmarcar todos os checkboxes dos ciclos de uma vez.
+
+<br>
 
 ## 🧑‍💻 Autor
 

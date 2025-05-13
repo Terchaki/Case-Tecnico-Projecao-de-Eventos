@@ -1,10 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-// import { Chart } from 'chart.js';
+
+// Chart
 import Chart from 'chart.js/auto';
+
+// RXJS
 import { Subscription } from 'rxjs';
+
+// Enums
 import { DayWeek } from '../../shared/enums/day-week.enum';
-import { DataEventsProjection } from '../../shared/models/data-events-projection.model';
+
+// Interfaces
 import { EventsProjection } from '../../shared/models/events-projection.model';
+import { Events } from '../../shared/models/data-events-table-chart.model';
+
+// Services
 import { EventsProjectionService } from '../../shared/services/eventsProjection/events-projection.service';
 
 @Component({
@@ -15,13 +24,7 @@ import { EventsProjectionService } from '../../shared/services/eventsProjection/
 })
 export class EventChartComponent implements OnInit, OnDestroy {
   chartInstance: Chart | any = null;
-  dataEvents!: {
-    day: number;
-    meetings: number;
-    emails: number;
-    calls: number;
-    follows: number;
-  }[];
+  dataEvents!: Events[];
   subscription!: Subscription;
   currentDate: Date = new Date();
   projectionUpcomingEents!: EventsProjection[];
@@ -41,61 +44,33 @@ export class EventChartComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Receiving the data to build the graph.
+   */
   getDataEvents() {
     this.subscription =
       this.eventsProjectionService.eventsProjection$.subscribe((data) => {
         if (data) {
           console.log(data);
           this.dataEvents = data;
-          // console.log(data);
-          // this.dataEvents = {
-          //   quantityEntity: 1,
-          //   projections: {
-          //     cycles: [],
-          //     eventsProjection: data
-          //   },
-          //   // eventsProjection: data
-          // };
-          // console.log(this.dataEvents);
-          // this.dataEvents = data;
           this.initGraf();
         }
       });
-    // this.subscription = this.eventsProjectionService.data$.subscribe((data) => {
-    //   if (data) {
-    //     console.log(data);
-    //     this.dataEvents = data;
-    //     this.initGraf();
-    //     console.log(this.dataEvents);
-    //   }
-    // });
   }
 
   initGraf() {
     this.projectionUpcomingEents = [];
 
-    // Obtaining the object with the ordering of working days.
-    // this.projectionUpcomingEents = this.eventsProjectionService.orderNextEvents(
-    //   this.dataEvents
-    // );
-
     this.projectionUpcomingEents =
       this.eventsProjectionService.transformarEventosComData(this.dataEvents);
 
-      console.log(this.projectionUpcomingEents);
+    console.log(this.projectionUpcomingEents);
 
     if (this.chartInstance) {
       this.chartInstance.destroy();
     }
 
     let currentDay: number = this.currentDate.getDay();
-
-    /**
-     * To simulate a specific day in the chart legend,
-     * simply uncomment this line and insert the desired day.
-     * Ex:
-     */
-    // currentDay = 3;
 
     const grafico = document.getElementById('grafico') as HTMLCanvasElement;
 
