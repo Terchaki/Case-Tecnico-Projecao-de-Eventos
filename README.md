@@ -6,7 +6,7 @@
 
 <br>
 
-Esta aplicação Angular tem como objetivo apresentar uma projeção dinâmica de eventos diários ao longo de cinco dias úteis, organizada por ciclos de atividades com diferentes níveis de prioridade. O usuário pode iniciar uma quantidade específica de entidades, que são distribuídas inteligentemente entre os ciclos de maior prioridade. Um gráfico interativo exibe a projeção, atualizando-se em tempo real conforme as configurações de ciclos e entidades são modificadas.
+Esta é uma aplicação Angular responsiva que tem como objetivo apresentar uma projeção dinâmica de eventos diários ao longo de cinco dias úteis, organizada por ciclos de atividades com diferentes níveis de prioridade. O usuário pode iniciar uma quantidade específica de entidades, que são distribuídas inteligentemente entre os ciclos de maior prioridade. Um gráfico interativo exibe a projeção, atualizando-se em tempo real conforme as configurações de ciclos e entidades são modificadas.
 
 <br>
 
@@ -40,12 +40,14 @@ Detalhes sobre as decisões de arquitetura, os desafios enfrentados e as motiva�
 
 ## 📂 Estrutura de Pastas do Projeto
 
-├── public/       // Armazenamento de Imagens, ícones e retorno simulado da Api.
-src/
-├── app/
-│   ├── features/ // Funcionalidades desenvolvidas.
-│   ├── shared/   // Componentes, Enums, Services e Interfaces de compartilhamento.
-│   └── app.module.ts
+```bash
+├── public/            // Armazenamento de Imagens, ícones e retorno simulado da API.
+└── src/
+    └── app/
+        ├── features/  // Funcionalidades desenvolvidas.
+        ├── shared/    // Componentes, Enums, Services e Interfaces de compartilhamento.
+        └── app.config.ts
+```
 
 
 ## ⚙️ Como Executar o Projeto Localmente
@@ -61,7 +63,6 @@ src/
 1.  Clone o repositório:
     ```bash
     git clone [https://github.com/Terchaki/teste-frontend-v4.git](https://github.com/Terchaki/Case-Tecnico-Projecao-de-Eventos.git)
-    cd teste-frontend-v4
     ```
 2.  Instale as dependências do projeto:
     ```bash

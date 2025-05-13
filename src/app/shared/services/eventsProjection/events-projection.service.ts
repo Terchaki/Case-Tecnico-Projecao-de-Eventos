@@ -40,7 +40,6 @@ export class EventsProjectionService {
     calls: number;
     follows: number;
   }) {
-    console.log(data);
     this.eventsProjectionSubject.next(data);
   }
 

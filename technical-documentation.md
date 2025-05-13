@@ -1,5 +1,5 @@
 
-# 📄 Documentação Técnica — Projeção de Eventos
+# 📄 Documentação Técnica - Projeção de Eventos
 
 ##  Arquitetura da Aplicação
 

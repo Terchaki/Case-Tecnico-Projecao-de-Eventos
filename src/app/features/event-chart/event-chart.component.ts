@@ -51,7 +51,6 @@ export class EventChartComponent implements OnInit, OnDestroy {
     this.subscription =
       this.eventsProjectionService.eventsProjection$.subscribe((data) => {
         if (data) {
-          console.log(data);
           this.dataEvents = data;
           this.initGraf();
         }
@@ -64,7 +63,6 @@ export class EventChartComponent implements OnInit, OnDestroy {
     this.projectionUpcomingEents =
       this.eventsProjectionService.transformarEventosComData(this.dataEvents);
 
-    console.log(this.projectionUpcomingEents);
 
     if (this.chartInstance) {
       this.chartInstance.destroy();

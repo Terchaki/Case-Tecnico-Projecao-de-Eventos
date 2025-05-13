@@ -59,8 +59,6 @@ export class CylesComponent implements OnInit, OnDestroy {
               data?.projections
             );
 
-          console.log(this.dataCycles);
-
           // Automatically mark allocated cycles
           this.selectedCycleNames = this.dataCycles.table
             .filter((t: any) => parseInt(t.selected.split('/')[0], 10) > 0)
@@ -68,7 +66,6 @@ export class CylesComponent implements OnInit, OnDestroy {
 
           this.eventsProjectionService.setDataProjetions(this.dataCycles.chart);
           this.cdr.detectChanges();
-          console.log(this.dataCycles);
         }
       }
     );

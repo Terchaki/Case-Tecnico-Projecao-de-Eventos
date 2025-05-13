@@ -135,7 +135,6 @@ export class ModalEntitiesComponent implements OnInit, OnDestroy {
       (total) => {
         if (total) {
           this.totalAvailable = total;
-          console.log('Total received in parent:', total);
         }
       }
     );
