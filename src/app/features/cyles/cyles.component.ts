@@ -60,11 +60,9 @@ export class CylesComponent implements OnInit, OnDestroy {
             .filter((t: any) => parseInt(t.selecionados.split('/')[0], 10) > 0)
             .map((t: any) => t.nome);
 
-          let env = {
-            quantityEntity: data?.quantityEntity,
-            projections: this.dataCycles.grafico,
-          };
-          this.eventsProjectionService.setDataProjetions(env);
+          this.eventsProjectionService.setDataProjetions(
+            this.dataCycles.grafico
+          );
           this.cdr.detectChanges();
           console.log(this.dataCycles);
         }

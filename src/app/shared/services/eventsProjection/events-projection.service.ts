@@ -21,77 +21,132 @@ export class EventsProjectionService {
   }
 
   // Method to send data to another component.
-  setDataProjetions(data: { quantityEntity: number; projections: DataEventsProjection }) {
+  setDataProjetions(data: {
+    day: number;
+    meetings: number;
+    emails: number;
+    calls: number;
+    follows: number;
+  }) {
     console.log(data);
     this.eventsProjectionSubject.next(data);
+  }
+
+  transformarEventosComData(
+    data: {
+      day: number;
+      meetings: number;
+      emails: number;
+      calls: number;
+      follows: number;
+    }[]
+  ): EventsProjection[] {
+    const hoje = new Date();
+
+    const isDiaUtil = (date: Date): boolean => {
+      const diaSemana = date.getDay();
+      return diaSemana >= 1 && diaSemana <= 5;
+    };
+
+    // Ordenar os dados para começar do day 2 (hoje), seguindo em ordem circular
+    const dataOrdenada = [...data];
+    const indiceHoje = dataOrdenada.findIndex((d) => d.day === 2); // day 2 é hoje
+
+    const dadosReordenados = [
+      ...dataOrdenada.slice(indiceHoje),
+      ...dataOrdenada.slice(0, indiceHoje),
+    ];
+
+    // Gerar os próximos 5 dias úteis a partir de hoje
+    const diasUteis: Date[] = [];
+    const cursor = new Date(hoje);
+
+    while (diasUteis.length < 5) {
+      if (isDiaUtil(cursor)) {
+        diasUteis.push(new Date(cursor));
+      }
+      cursor.setDate(cursor.getDate() + 1);
+    }
+
+    // Associar as datas aos dados reordenados
+    return dadosReordenados.map((item, index) => ({
+      day: item.day,
+      date: diasUteis[index],
+      events: {
+        meetings: item.meetings,
+        emails: item.emails,
+        calls: item.calls,
+        follows: item.follows,
+      },
+    }));
   }
 
   /**
    * Ordering of latest events by working days.
    */
-  orderNextEvents(events: {
-    quantityEntity: number;
-    projections: DataEventsProjection;
-  }): EventsProjection[] | any {
-    let today = new Date().getDay();
-    /**
-     * To simulate a day to order the next days on the chart,
-     * simply uncomment this line and insert the desired day.
-     * Ex:
-     */
-    // today = 3;
+  // orderNextEvents(events: {
+  //   quantityEntity: number;
+  //   projections: DataEventsProjection;
+  // }): EventsProjection[] | any {
+  //   let today = new Date().getDay();
+  //   /**
+  //    * To simulate a day to order the next days on the chart,
+  //    * simply uncomment this line and insert the desired day.
+  //    * Ex:
+  //    */
+  //   // today = 3;
 
-    // Taking the current business day or the next one if today is Saturday or Sunday.
-    let businessDay = today === 0 || today === 6 ? 1 : today;
+  //   // Taking the current business day or the next one if today is Saturday or Sunday.
+  //   let businessDay = today === 0 || today === 6 ? 1 : today;
 
-    const daysWeek: number[] = [];
+  //   const daysWeek: number[] = [];
 
-    // Get days object.
-    events.projections.eventsProjection.forEach((obj) => {
-      daysWeek.push(obj.day);
-    });
+  //   // Get days object.
+  //   events.projections.eventsProjection.forEach((obj) => {
+  //     daysWeek.push(obj.day);
+  //   });
 
-    // Get position current day.
-    const currentDayPositionsList = daysWeek.indexOf(businessDay);
+  //   // Get position current day.
+  //   const currentDayPositionsList = daysWeek.indexOf(businessDay);
 
-    // Ordering the current day as first.
-    const nextDaysOrder = [
-      ...daysWeek.slice(currentDayPositionsList),
-      ...daysWeek.slice(0, currentDayPositionsList),
-    ];
+  //   // Ordering the current day as first.
+  //   const nextDaysOrder = [
+  //     ...daysWeek.slice(currentDayPositionsList),
+  //     ...daysWeek.slice(0, currentDayPositionsList),
+  //   ];
 
-    const listNextDaysOrder: EventsProjection[] = nextDaysOrder.flatMap(
-      (day) => {
-        // Find the current or next business day.
-        const found = events.projections.eventsProjection.find(
-          (e) => e.day === day
-        );
-        return found ? [found] : [];
-      }
-    );
+  //   const listNextDaysOrder: EventsProjection[] = nextDaysOrder.flatMap(
+  //     (day) => {
+  //       // Find the current or next business day.
+  //       const found = events.projections.eventsProjection.find(
+  //         (e) => e.day === day
+  //       );
+  //       return found ? [found] : [];
+  //     }
+  //   );
 
-    // Including future dates in the object based on today's (current) date.
-    const dateBusiness = new Date();
-    for (let index = 0; index < listNextDaysOrder.length; index++) {
-      while (dateBusiness.getDay() === 0 || dateBusiness.getDay() === 6) {
-        if (dateBusiness.getDay() === 0) {
-          dateBusiness.setDate(dateBusiness.getDate() + 1);
-        } else {
-          dateBusiness.setDate(dateBusiness.getDate() + 2);
-        }
-      }
+  //   // Including future dates in the object based on today's (current) date.
+  //   const dateBusiness = new Date();
+  //   for (let index = 0; index < listNextDaysOrder.length; index++) {
+  //     while (dateBusiness.getDay() === 0 || dateBusiness.getDay() === 6) {
+  //       if (dateBusiness.getDay() === 0) {
+  //         dateBusiness.setDate(dateBusiness.getDate() + 1);
+  //       } else {
+  //         dateBusiness.setDate(dateBusiness.getDate() + 2);
+  //       }
+  //     }
 
-      listNextDaysOrder[index].date = new Date(dateBusiness);
+  //     listNextDaysOrder[index].date = new Date(dateBusiness);
 
-      if (dateBusiness.getDay() === 5) {
-        dateBusiness.setDate(dateBusiness.getDate() + 3);
-      } else {
-        dateBusiness.setDate(dateBusiness.getDate() + 1);
-      }
-    }
+  //     if (dateBusiness.getDay() === 5) {
+  //       dateBusiness.setDate(dateBusiness.getDate() + 3);
+  //     } else {
+  //       dateBusiness.setDate(dateBusiness.getDate() + 1);
+  //     }
+  //   }
 
-    return listNextDaysOrder;
-  }
+  //   return listNextDaysOrder;
+  // }
 
   getDadosParaGraficoELista(
     quantityEntity: number,

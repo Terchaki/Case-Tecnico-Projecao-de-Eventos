@@ -15,7 +15,13 @@ import { EventsProjectionService } from '../../shared/services/eventsProjection/
 })
 export class EventChartComponent implements OnInit, OnDestroy {
   chartInstance: Chart | any = null;
-  dataEvents!: { quantityEntity: number; projections: DataEventsProjection };
+  dataEvents!: {
+    day: number;
+    meetings: number;
+    emails: number;
+    calls: number;
+    follows: number;
+  }[];
   subscription!: Subscription;
   currentDate: Date = new Date();
   projectionUpcomingEents!: EventsProjection[];
@@ -40,33 +46,43 @@ export class EventChartComponent implements OnInit, OnDestroy {
       this.eventsProjectionService.eventsProjection$.subscribe((data) => {
         if (data) {
           console.log(data);
-          this.dataEvents = {
-            quantityEntity: 1,
-            projections: data,
-            // eventsProjection: data
-          };
-          console.log(this.dataEvents);
+          this.dataEvents = data;
+          // console.log(data);
+          // this.dataEvents = {
+          //   quantityEntity: 1,
+          //   projections: {
+          //     cycles: [],
+          //     eventsProjection: data
+          //   },
+          //   // eventsProjection: data
+          // };
+          // console.log(this.dataEvents);
           // this.dataEvents = data;
           this.initGraf();
         }
       });
-    this.subscription = this.eventsProjectionService.data$.subscribe((data) => {
-      if (data) {
-        console.log(data);
-        this.dataEvents = data;
-        this.initGraf();
-        console.log(this.dataEvents);
-      }
-    });
+    // this.subscription = this.eventsProjectionService.data$.subscribe((data) => {
+    //   if (data) {
+    //     console.log(data);
+    //     this.dataEvents = data;
+    //     this.initGraf();
+    //     console.log(this.dataEvents);
+    //   }
+    // });
   }
 
   initGraf() {
     this.projectionUpcomingEents = [];
 
     // Obtaining the object with the ordering of working days.
-    this.projectionUpcomingEents = this.eventsProjectionService.orderNextEvents(
-      this.dataEvents
-    );
+    // this.projectionUpcomingEents = this.eventsProjectionService.orderNextEvents(
+    //   this.dataEvents
+    // );
+
+    this.projectionUpcomingEents =
+      this.eventsProjectionService.transformarEventosComData(this.dataEvents);
+
+      console.log(this.projectionUpcomingEents);
 
     if (this.chartInstance) {
       this.chartInstance.destroy();
