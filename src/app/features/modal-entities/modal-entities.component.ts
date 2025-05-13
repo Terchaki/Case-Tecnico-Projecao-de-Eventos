@@ -50,6 +50,10 @@ export class ModalEntitiesComponent implements OnInit, OnDestroy {
   subscription!: Subscription;
   qualityEventsDay: number = 1;
   currentDay: number = new Date().getDay();
+  dataEventsChart!: {
+    quantityEntity: number;
+    projections: DataEventsProjection;
+  };
 
   constructor(
     private formBuilder: FormBuilder,
@@ -84,11 +88,6 @@ export class ModalEntitiesComponent implements OnInit, OnDestroy {
   getDataEventsProjection() {
     let sumEvents: number = 0;
 
-    let dataEventsChart!: {
-      quantityEntity: number;
-      projections: DataEventsProjection;
-    };
-
     this.subscription = this.apiService.getEventProjection().subscribe({
       next: (res) => {
         res.eventsProjection.forEach((element) => {
@@ -112,11 +111,11 @@ export class ModalEntitiesComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
 
         // Data sent via service to components.
-        dataEventsChart = {
+        this.dataEventsChart = {
           quantityEntity: this.formControls['quantityEntities'].value,
           projections: res,
         };
-        this.eventsProjectionService.setData(dataEventsChart);
+        this.eventsProjectionService.setData(this.dataEventsChart);
       },
       error: (err: HttpErrorResponse) => {
         this.toastrFeedbackService.toast(
@@ -176,9 +175,37 @@ export class ModalEntitiesComponent implements OnInit, OnDestroy {
   /**
    * Restore Default Data.
    */
-  restoreDefaultData() {}
+  restoreDefaultData() {
+    this.formControls['quantityEntities'].setValue(1);
+    this.dataEventsChart.quantityEntity = 1;
+    this.eventsProjectionService.setData(this.dataEventsChart);
+    this.toastrFeedbackService.toast(
+      '',
+      `O Gráfico e os Ciclos foram restaurados para os seus valores padrões para o dia de ${this.getDayWeek()}.`,
+      'success'
+    );
+  }
 
   onSubmit() {
+    if (this.form.valid) {
+      let quantityEntity = this.formControls['quantityEntities'].value;
 
+      this.dataEventsChart.quantityEntity = quantityEntity;
+      this.eventsProjectionService.setData(this.dataEventsChart);
+
+      if (quantityEntity > 1) {
+        this.toastrFeedbackService.toast(
+          '',
+          `Foi iniciado ${quantityEntity} entidades! `,
+          'success'
+        );
+      }
+    } else {
+      this.toastrFeedbackService.toast(
+        'Valor inválido!',
+        'A entidade só é iniciada com valores a partir de 1.',
+        'warning'
+      );
+    }
   }
 }

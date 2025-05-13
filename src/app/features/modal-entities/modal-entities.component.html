@@ -68,7 +68,12 @@
     </div>
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button mat-button class="btn-restart" (click)="restoreDefaultData()">
+    <button
+      mat-button
+      class="btn-restart"
+      type="button"
+      (click)="restoreDefaultData()"
+    >
       Restaurar
     </button>
     <button mat-button type="submit" class="btn-init">

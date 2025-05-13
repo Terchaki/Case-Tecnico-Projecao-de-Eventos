@@ -13,17 +13,7 @@ import { ModalEntitiesComponent } from '../modal-entities/modal-entities.compone
 export class HomeComponent implements OnInit {
   constructor(private dialog: MatDialog, private apiService: ApiService) {}
 
-  ngOnInit() {
-    // this.getDataEventsProjection();
-  }
-
-  getDataEventsProjection() {
-    this.apiService.getEventProjection().subscribe({
-      next: (res) => {
-        console.log(res);
-      },
-    });
-  }
+  ngOnInit() {}
 
   openModal() {
     this.dialog.open(ModalEntitiesComponent, {

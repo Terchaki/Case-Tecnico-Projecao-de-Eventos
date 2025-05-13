@@ -6,7 +6,6 @@ import { EventsProjectionService } from '../../shared/services/eventsProjection/
 import { Subscription } from 'rxjs';
 import { DataEventsProjection } from '../../shared/models/data-events-projection.model';
 import { Cycles } from '../../shared/models/cycles.model';
-import { StructureCycles } from '../../shared/models/structure-cycles.model';
 
 @Component({
   selector: 'app-cyles',
@@ -49,7 +48,6 @@ export class CylesComponent implements OnInit, OnDestroy {
   getDataEvents() {
     this.subscription = this.eventsProjectionService.data$.subscribe(
       (data: { quantityEntity: number; projections: DataEventsProjection }) => {
-        console.log(data);
         if (data?.quantityEntity && data?.projections) {
           this.dataCycles =
             this.eventsProjectionService?.getDadosParaGraficoELista(
@@ -59,8 +57,14 @@ export class CylesComponent implements OnInit, OnDestroy {
 
           // Marcar automaticamente ciclos que foram alocados
           this.ciclosSelecionadosNomes = this.dataCycles.tabela
-            .filter((t: any) => t.selecionados.startsWith('1')) // ou > 0, dependendo de como deseja marcar
+            .filter((t: any) => parseInt(t.selecionados.split('/')[0], 10) > 0)
             .map((t: any) => t.nome);
+
+          let env = {
+            quantityEntity: data?.quantityEntity,
+            projections: this.dataCycles.grafico,
+          };
+          this.eventsProjectionService.setDataProjetions(env);
           this.cdr.detectChanges();
           console.log(this.dataCycles);
         }

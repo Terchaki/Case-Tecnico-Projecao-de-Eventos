@@ -15,7 +15,7 @@ export class ToastrFeedbackService {
   }
 
   // Message Toast
-  public toast(titulo: string, message: string, typeToaster: string) {
+  public toast(message: string, titulo: string, typeToaster: string) {
     this.toastr.clear();
     setTimeout(() => {
       this.globalConfig.progressBar = true;

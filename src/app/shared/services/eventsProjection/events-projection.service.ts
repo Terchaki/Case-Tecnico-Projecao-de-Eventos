@@ -10,11 +10,20 @@ export class EventsProjectionService {
   private dataSubject = new BehaviorSubject<any>(null);
   data$ = this.dataSubject.asObservable();
 
+  private eventsProjectionSubject = new BehaviorSubject<any>(null);
+  eventsProjection$ = this.eventsProjectionSubject.asObservable();
+
   constructor() {}
 
   // Method to send data to another component.
   setData(data: { quantityEntity: number; projections: DataEventsProjection }) {
     this.dataSubject.next(data);
+  }
+
+  // Method to send data to another component.
+  setDataProjetions(data: { quantityEntity: number; projections: DataEventsProjection }) {
+    console.log(data);
+    this.eventsProjectionSubject.next(data);
   }
 
   /**
@@ -80,7 +89,6 @@ export class EventsProjectionService {
         dateBusiness.setDate(dateBusiness.getDate() + 1);
       }
     }
-    console.log(listNextDaysOrder);
 
     return listNextDaysOrder;
   }

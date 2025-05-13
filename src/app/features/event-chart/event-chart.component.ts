@@ -36,12 +36,26 @@ export class EventChartComponent implements OnInit, OnDestroy {
   }
 
   getDataEvents() {
+    this.subscription =
+      this.eventsProjectionService.eventsProjection$.subscribe((data) => {
+        if (data) {
+          console.log(data);
+          this.dataEvents = {
+            quantityEntity: 1,
+            projections: data,
+            // eventsProjection: data
+          };
+          console.log(this.dataEvents);
+          // this.dataEvents = data;
+          this.initGraf();
+        }
+      });
     this.subscription = this.eventsProjectionService.data$.subscribe((data) => {
-      console.log(data);
       if (data) {
+        console.log(data);
         this.dataEvents = data;
-        console.log(this.dataEvents);
         this.initGraf();
+        console.log(this.dataEvents);
       }
     });
   }
