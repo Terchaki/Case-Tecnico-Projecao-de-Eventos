@@ -7,7 +7,6 @@ import { BehaviorSubject } from 'rxjs';
 import {
   DataEventsTableChart,
   Events,
-  EventsTable,
 } from '../../models/data-events-table-chart.model';
 import { DataEventsProjection } from '../../models/data-events-projection.model';
 import { EventsProjection } from '../../models/events-projection.model';
@@ -62,25 +61,25 @@ export class EventsProjectionService {
       follows: number;
     }[]
   ): EventsProjection[] {
-    const hoje = new Date();
+    const today = new Date();
 
     const isDiaUtil = (date: Date): boolean => {
-      const diaSemana = date.getDay();
-      return diaSemana >= 1 && diaSemana <= 5;
+      const dayWeek = date.getDay();
+      return dayWeek >= 1 && dayWeek <= 5;
     };
 
     // Ordenar os dados para começar do day 2 (hoje), seguindo em ordem circular
-    const dataOrdenada = [...data];
-    const indiceHoje = dataOrdenada.findIndex((d) => d.day === 2); // day 2 é hoje
+    const dateOrder = [...data];
+    const indexToday = dateOrder.findIndex((d) => d.day === today.getDay()); // day 2 é hoje
 
     const dadosReordenados = [
-      ...dataOrdenada.slice(indiceHoje),
-      ...dataOrdenada.slice(0, indiceHoje),
+      ...dateOrder.slice(indexToday),
+      ...dateOrder.slice(0, indexToday),
     ];
 
     // Gerar os próximos 5 dias úteis a partir de hoje
     const diasUteis: Date[] = [];
-    const cursor = new Date(hoje);
+    const cursor = new Date(today);
 
     while (diasUteis.length < 5) {
       if (isDiaUtil(cursor)) {

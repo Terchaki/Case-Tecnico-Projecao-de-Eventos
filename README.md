@@ -33,6 +33,7 @@ Detalhes sobre as decisões de arquitetura, os desafios enfrentados e as motiva�
 ## 🛠️ Tecnologias Utilizadas
 
 * [Angular (v19)](https://angular.io/) - Framework para construção da interface de usuário.
+* [Angular Material](https://material.angular.dev/) - Biblioteca de componentes do Angular.
 * [Bootstrap](https://getbootstrap.com/) - Biblioteca de estilos CSS para facilitar o layout e a responsividade.
 * [RxJS](https://rxjs.dev/) - Biblioteca para programação reativa com streams de dados.
 * [Ngx-Toastr](https://www.npmjs.com/package/ngx-toastr) - Biblioteca para exibir notificações e feedback visual ao usuário.
